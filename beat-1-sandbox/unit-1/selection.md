@@ -15,8 +15,7 @@ wrong label is not graded.
 
 **Issue link**
 
-[The individual Path Review issue page. A link to the repository or the issue list
-does not satisfy this field.]
+https://github.com/codepath/pathreview-ai301-fa26-s3/issues/53
 
 **Verdict output**
 
@@ -30,7 +29,59 @@ partial re-run costs about $0.20 — or run the skill on different candidates. O
 recording `reject` for the issue you chose earns no credit for this field.
 
 ```
-paste the output here, including the closing JSON block
+[
+  {"item":"https://github.com/codepath/pathreview-ai301-fa26-s3/issues/53","checks":[
+    {"name":"repo-alive","grade":"pass","evidence":"default-branch commits today 2026-09-16"},
+    {"name":"repo-not-archived","grade":"pass","evidence":"isArchived: false"},
+    {"name":"scope-newcomer-sized","grade":"pass","evidence":"single regex fix in pii_scrubber.py with repro script and 4 named failing tests"},
+    {"name":"unclaimed","grade":"pass","evidence":"assignees: none, comments: none, no linked/mentioned PRs"},
+    {"name":"policy-allows-ai-assist","grade":"pass","evidence":"CONTRntain no AI-use language"},
+    {"name":"maintainer-answers","grade":"pass","evidence":"Aburke225 (COLLABORATOR) replied on issues #52 and #43"},
+    {"name":"newcomer-signposted","grade":"pass","evidence":"carries good-first-issue label; names pii_scrubber.py and 4 tests"},
+    {"name":"still-shipping","grade":"fail","evidence":"gh release lis
+  ],"verdict":"accept"},
+  {"item":"https://github.com/codepath/pathreview-ai301-fa26-s3/issues/69","checks":[
+    {"name":"repo-alive","grade":"pass","evidence":"default-branch com
+    {"name":"repo-not-archived","grade":"pass","evidence":"isArchived: false"},
+    {"name":"scope-newcomer-sized","grade":"pass","evidence":"single fallback-path fix in output_parser.py, named xfail test to remove"},
+    {"name":"unclaimed","grade":"pass","evidence":"assignees: none, cooned PRs"},
+    {"name":"policy-allows-ai-assist","grade":"pass","evidence":"no AI-use restriction found"},
+    {"name":"maintainer-answers","grade":"pass","evidence":"Aburke225 (COLLABORATOR) replied on issues #52 and #43"},
+    {"name":"newcomer-signposted","grade":"pass","evidence":"good-firsarser.py and its test file"},
+    {"name":"still-shipping","grade":"fail","evidence":"no releases published"}
+  ],"verdict":"accept"},
+  {"item":"https://github.com/codepath/pathreview-ai301-fa26-s3/issues
+    {"name":"repo-alive","grade":"pass","evidence":"default-branch commits today 2026-09-16"},
+    {"name":"repo-not-archived","grade":"pass","evidence":"isArchived: false"},
+    {"name":"scope-newcomer-sized","grade":"pass","evidence":"single .faithfulness_checker.py with repro script"},
+    {"name":"unclaimed","grade":"pass","evidence":"assignees: none, comments: none, no linked/mentioned PRs"},
+    {"name":"policy-allows-ai-assist","grade":"pass","evidence":"no AI-use restriction found"},
+    {"name":"maintainer-answers","grade":"pass","evidence":"Aburke225 ues #52 and #43"},
+    {"name":"newcomer-signposted","grade":"pass","evidence":"good-first-issue label; names the file and one failing test"},
+    {"name":"still-shipping","grade":"fail","evidence":"no releases published"}
+  ],"verdict":"accept"},
+  {"item":"https://github.com/codepath/pathreview-ai301-fa26-s3/issues/57","checks":[
+    {"name":"repo-alive","grade":"pass","evidence":"default-branch commits today 2026-09-16"},
+    {"name":"repo-not-archived","grade":"pass","evidence":"isArchived:
+    {"name":"scope-newcomer-sized","grade":"pass","evidence":"single filter fix in tech_detector.py with repro script and 2 named tests"},
+    {"name":"unclaimed","grade":"pass","evidence":"assignees: none, comments: none, no linked/mentioned PRs"},
+    {"name":"policy-allows-ai-assist","grade":"pass","evidence":"no AI
+    {"name":"maintainer-answers","grade":"pass","evidence":"Aburke225 (COLLABORATOR) replied on issues #52 and #43"},
+    {"name":"newcomer-signposted","grade":"pass","evidence":"good-first-issue label; names file and 2 tests"},
+    {"name":"still-shipping","grade":"fail","evidence":"no releases pu
+  ],"verdict":"accept"},
+  {"item":"https://github.com/codepath/pathreview-ai301-fa26-s3/issues/73","checks":[
+    {"name":"repo-alive","grade":"pass","evidence":"default-branch com
+    {"name":"repo-not-archived","grade":"pass","evidence":"isArchived: false"},
+    {"name":"scope-newcomer-sized","grade":"pass","evidence":"two-file doc/config sync, 1-2h estimate"},
+    {"name":"unclaimed","grade":"pass","evidence":"assignees: none, cooned PRs"},
+    {"name":"policy-allows-ai-assist","grade":"pass","evidence":"no AI-use restriction found"},
+    {"name":"maintainer-answers","grade":"pass","evidence":"Aburke225 (COLLABORATOR) replied on issues #52 and #43"},
+    {"name":"newcomer-signposted","grade":"pass","evidence":"good-firses"},
+    {"name":"still-shipping","grade":"fail","evidence":"no releases published"}
+  ],"verdict":"accept"}
+]
+
 ```
 
 ---
