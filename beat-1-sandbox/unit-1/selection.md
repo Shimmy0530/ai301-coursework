@@ -25,23 +25,23 @@ Required checks (all pass):
 
 - repo-alive: pass. The newest commit on main is from 2026-09-16 (today), by a human, Aburke225.
 - repo-not-archived: pass. isArchived: false.
-- scope-newcomer-sized: pass. It's one bug: pii_[scrubber.py](http://scrubber.py) misses phone numbers written as (555) 123-4567. The issue includes steps to reproduce and names 4 failing tests. It isn't a tracking issue and has no sub-issues.
+- scope-newcomer-sized: pass. It's one bug: `safety/pii_scrubber.py` misses phone numbers written as (555) 123-4567. The issue includes steps to reproduce and names 4 failing tests. It isn't a tracking issue and has no sub-issues.
 - unclaimed: pass. Nobody is assigned, no pull request is linked or mentions it, and there are 0 comments.
-- policy-allows-ai-assist: pass. docs/[CONTRIBUTING.md](http://CONTRIBUTING.md), the PR template and the issue templates say nothing about AI.
+- policy-allows-ai-assist: pass. `docs/CONTRIBUTING.md`, the PR template and the issue templates say nothing about AI.
 
 Preferred checks (2 of 3 pass):
 
 - maintainer-answers: pass. Aburke225, who has Collaborator access, commented on issues #52 and #43 today.
-- newcomer-signposted: pass. It's labeled good first issue and tier-1,and the tests.
+- newcomer-signposted: pass. It's labeled good first issue and tier-1, and the body names `pii_scrubber.py` and `tests/unit/test_pii_scrubber.py`.
 - still-shipping: fail. The repo has published no releases. This check never affects the verdict.
 
-Why it fits you: the fix is a regex change in safety/pii_[scrubber.py](http://scrubber.py) ppii_[scrubber.py](http://scrubber.py). That's all Python, and you don't need to touch thefrontend.
+Why it fits you: the fix is a regex change in `safety/pii_scrubber.py`. That's all Python, and you don't need to touch the frontend.
 
-Before you open a pull request: the failing tests carry @pytest.mark.xur pull request has to remove those markers, or CI fails withXPASS(strict) once your fix makes the tests pass.
+Before you open a pull request: the failing tests carry `@pytest.mark.xfail(strict=True)` markers. Your pull request has to remove those markers, or CI fails with `XPASS(strict)` once your fix makes the tests pass.
 
-Don't comment on the issue yet. [CONTRIBUTING.md](http://CONTRIBUTING.md) tells you to comment bming the issue is Unit 2's lesson.
+Don't comment on the issue yet. `docs/CONTRIBUTING.md` tells you to comment before you start work, but claiming the issue is Unit 2's lesson.
 
-Next step: add #53 and this grading to the "chosen issue" section of beat-1-sandbox/unit-1/[selection.md](http://selection.md). That's about 10 minutes.'
+Next step: add #53 and this grading to the "chosen issue" section of `beat-1-sandbox/unit-1/selection.md`. That's about 10 minutes.
 
 ```
 {
