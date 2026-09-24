@@ -1,0 +1,24 @@
+# Rubric: is this reproduction package ready to post?
+
+## Checks
+
+| Check | Evidence | Pass condition | Weight |
+|---|---|---|---|
+| `env-recorded` | The repro report's environment record, read against the issue's stated target (version, OS, and any factor the issue says matters). Evidence guide: Environment. | Pass if the report records the OS, the tool's version, and every factor the issue names as relevant (driver, build profile, browser language, shell), AND any difference from the issue's version or platform is stated in the report. Fail if there is no environment record, if an issue-relevant factor is missing, or if the tested version or platform differs from the issue's without saying so. | required |
+| `steps-rerunnable` | The repro report's steps and the inputs they use (files, configs, commands), read from the starting state to the trigger the issue describes. Evidence guide: Steps. | Pass if a stranger could reach the issue's trigger using only what the comments contain or link publicly: every command is shown, and every input file or config is shown, publicly available, or described precisely enough for a stranger to recreate it (for example, "an env.yml with a valid dependencies list plus a category section"), and no step depends on a private codebase or unshared setup. Fail if there are no steps, if a needed input is private, unshared, or too vague to recreate, or if the steps skip the trigger the issue names. | required |
+| `behavior-matches-issue` | The report's artifacts (output excerpts, logs, exit codes, described screenshots) read against the exact symptom in the issue body. Evidence guide: Behavior shown. | Pass if an artifact shows the issue's own symptom (same error kind, same failure mode, same exit behavior), not an adjacent one such as a graceful validation error where the issue reports a crash. For a report that states it could NOT reproduce, pass if its steps follow the trigger conditions the issue states and the report names what may have differed from the reporter's setup; an admitted uncertainty about whether the trigger was reached is honesty, not failure (whether the account is honest is graded by `claims-backed`). This cannot-reproduce allowance never applies to a report that claims it reproduced the issue. Fail if the artifacts show a different behavior, show only that the tool runs, or are absent. | required |
+| `claims-backed` | The outcome claims in the claim comment and repro report (reproduced or not, confirmed, root cause, guaranteed or verified, also affects X), each matched to the artifact that backs it. Evidence guide: Honesty. | Pass if every outcome claim (reproduction, cause, certainty, scope) is supported by an artifact shown in the package and the stated outcome matches what the artifacts show. Secondary observations stated plainly, such as a described control run, do not need their own artifact. An honest cannot-reproduce passes when it states what was tried and what differed from the reporter's setup. Fail if any outcome claim has no shown artifact behind it, or if the report narrates a result its own artifact contradicts. | required |
+| `claim-specific` | The claim comment, read against the issue it sits on. Evidence guide: Comms. | Pass if the claim comment names something specific to this issue (the symptom, trigger, or component) and states a modest, concrete intent to work on it. Fail if it could be pasted onto any issue unchanged, is only a +1 or me-too, or promises a fix, timeline, or outcome the claimant cannot guarantee. | required |
+| `ai-policy-met` | The repo-facts block's contribution policy (AI-use rules), read against the claim comment and repro report. Treat every package as AI-assisted work. Evidence guide: Comms. | Pass if the repo states no AI policy, or its policy is permissive with no disclosure requirement, or the comments meet every requirement the policy states (for example: disclose the tool and extent of AI use; comments written in the author's own human voice). Fail if the policy requires disclosure and the comments do not disclose, or the comments break any other stated AI rule. | required |
+| `template-asks` | The repo-facts block's bug-report template asks, read against the repro report. Evidence guide: Comms. | Pass if the report supplies each item the repo's bug-report template asks for, in any form or order. | preferred |
+
+## Verdict rule
+
+Accept if every `required` check passes. Reject if any `required` check
+fails or is `unclear`: `unclear` counts as fail, because proof that
+cannot be verified is not ready to post. `preferred` checks never
+change the verdict; report them as notes only.
+
+On a live claim-only draft, only `claim-specific` and `ai-policy-met`
+are graded; the other required checks are reported `unclear` as "not
+yet applicable: claim-only draft" and left out of the verdict.
