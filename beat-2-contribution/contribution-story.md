@@ -163,24 +163,63 @@ Claim comment: https://github.com/nvaccess/nvda/issues/20159#issuecomment-618311
 
 **Environment Setup**
 
-[What a stranger would need to stand this up: your operating system,
-the relevant versions (language, runtime, package manager, the project
-itself), and how you set the project up. Then the challenges you faced
-and how you solved them, or that none came up.]
+- OS: Windows 11 (build 10.0.26300), Git 2.55.0.
+- Project: nvaccess/nvda at `20ae5c856` (master, 2026-10-15), cloned with
+  `git clone --recursive`, then `gh repo fork --remote` so `origin` is my
+  fork Shimmy0530/nvda and `upstream` is nvaccess/nvda.
+- Toolchain, per `projectDocs/dev/createDevEnvironment.md`: Visual Studio
+  Build Tools 2026 with the components in the repo's `.vsconfig`
+  (`setup.exe modify --config .vsconfig`), Python 3.13.15 64-bit from
+  python.org (installed per-user with winget), uv 0.13.1.
+- Setup: `uv sync`, then `scons source --all-cores` (finished with
+  "scons: done building targets."), then `runnvda.bat` to run from source.
+
+Challenges and fixes:
+
+- Build Tools 2026 was already installed but was missing 8 of the 9
+  components `.vsconfig` lists (C++ workload, Clang, ARM64 and ATL tools,
+  Windows 11 SDK 10.0.22621). Importing `.vsconfig` into the installer added
+  them.
+- uv 0.11.19 was older than the 0.12.5 the repo's `ensureuv.ps1` requires;
+  `uv self update` fixed it.
+- `uv sync` refused uv's own Python download, because `pyproject.toml` sets
+  `python-preference = "only-system"`, and my system 3.13 was the Microsoft
+  Store's 3.13.14. Installing python.org 3.13.15 fixed it.
+- `uv sync` then failed compiling `fast-diff-match-patch` until the Visual
+  Studio C++ components finished installing.
+- Launching `scons.bat` from Claude Code's shell failed three times with
+  "'scons.bat' is not recognized", because that shell sets
+  `NoDefaultCurrentDirectoryInExePath`. Calling it as `.\scons.bat` worked;
+  in a normal Command Prompt plain `scons source` works.
 
 **Steps to Reproduce**
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. Build and run NVDA from source on master `20ae5c856`: `scons source`,
+   then `runnvda.bat`.
+2. Create portable copy is hidden from the Tools menu when running from
+   source (`source/gui/__init__.py:713`), so open Tools > Python console and
+   run `import gui; gui.mainFrame.onCreatePortableCopyCommand(None)`.
+3. In the Create Portable NVDA dialog, type `D:` as the folder and press
+   Continue. Observed: an Error dialog reading
+
+   ```
+   Please specify the absolute path where the portable copy should be created. It must start with a drive letter (e.g. C:). It may include system variables (e.g. %temp%, %homepath%) as placeholders for parts of the path.
+   Current path: D:.
+   ```
 
 **Reproduction Evidence**
 
 - **Commit showing reproduction:** [link to commit in your fork]
-- **Screenshots/logs:** [if applicable]
-- **My findings:** [what you discovered during reproduction; an
-  honest, evidenced cannot-reproduce that led you to re-pick or ask
-  the maintainer belongs here and costs you nothing]
+- **Screenshots/logs:** screenshot of the error dialog over the Create
+  Portable NVDA dialog, taken 2026-10-15 on `20ae5c856`; the full error
+  text is pasted in step 3 above.
+- **My findings:** the bug reproduces on current master. The message has
+  changed since the issue was filed: the issue quotes the example as `C:\`,
+  and since commit `a8eae3d65` (#19666, 2026-02-23) it reads `C:`, which is
+  itself a bare drive that gets this same error. I posted the reproduction
+  and asked whether the clearer message should also change that example to
+  `C:\`:
+  https://github.com/nvaccess/nvda/issues/20159#issuecomment-6183684091
 
 **Toolkit**
 
