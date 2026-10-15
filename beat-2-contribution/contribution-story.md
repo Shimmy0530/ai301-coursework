@@ -55,10 +55,19 @@ happened; these entries are the toolkit's own timeline.
 All four entries are graded. Keep every heading below, and fill each
 one in the week it belongs to.
 
-**Unit 5: [one line on the tool work]**
+**Unit 5: (2026-10-14) Installed issue-scout over my unit 1 skill, wrote its search strategy, and patched my rubric for real-world repos**
 
-[2-4 sentences: what you built (the scout, your strategy), what broke
-or fell short, what changed because of it.]
+I built a search strategy for the scout: a Python bug query and a second
+query I switched from Kotlin to JavaScript after the first scan, because
+JavaScript is more flexible and widely used, and more familiar and
+interesting to me. The first scans accepted repos that don't credit outside
+contributors (chaoscypher's bot says a PR "is read as a bug report" and the
+fix ships internally), and also passed issues that already had recent claim
+comments, because my rubric still followed the Path Review rule that claims
+don't count. Being recognized as a contributor matters to me, so I added a
+required `contribution-credited` check and made `unclaimed` block any claim
+comment from the last 30 days; the unit 1 eval still agreed on all 9
+accept and policy items I re-ran.
 
 **Unit 6: [one line on the tool work]**
 
