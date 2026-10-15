@@ -1,4 +1,4 @@
-# Contribution: [Issue Title]
+# Contribution: Failure to create portable copy when path is a top-level drive with no backslash
 
 Path: `beat-2-contribution/contribution-story.md`
 
@@ -8,10 +8,9 @@ format criteria grade exactly that. Your course repo link is the whole submissio
 files and no evidence uploads are part of Assignment 5.
 
 **Contribution Number:** [1]
-**Student:** [Student name]
-**GitHub Username:** [your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comments upstream are identified by this name.]
-**Issue:** [GitHub issue link]
+**Student:** shimmy0530
+**GitHub Username:** Shimmy0530
+**Issue:** https://github.com/nvaccess/nvda/issues/20159
 **Pull Request:** [GitHub PR link, once opened]
 
 One repository, built across units 5 to 8, telling the whole story of your real
@@ -69,11 +68,15 @@ required `contribution-credited` check and made `unclaimed` block any claim
 comment from the last 30 days; the unit 1 eval still agreed on all 9
 accept and policy items I re-ran.
 
-**Unit 6: [one line on the tool work]**
+**Unit 6: (2026-10-14) Installed the voice-guard on my posting doorway, patched my scout's scope check, and wrote repo memory for NVDA**
 
-[2-4 sentences: the voice-guard, the repo-memory file. What broke or
-fell short, and what changed because of it. "Nothing broke" counts when
-it is true - say how you know.]
+The voice-guard stopped its wiring test as expected and passed my claim on
+nvaccess/nvda#20159 at both the manual check and the hook. Nothing fought me
+during the guard install beyond Windows' default cp1252 encoding, which would
+have crashed the checker and let posts through unchecked, so `PYTHONUTF8=1`
+was added to the hook. For the repo memory, the most useful parts are the
+guidance from the closed PRs: three PRs on this issue got closed, which means
+they didn't do something right, and I can learn from it.
 
 **Unit 7: [one line on the tool work]**
 
@@ -89,24 +92,43 @@ drafted, what you did with the draft.]
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs in your own words: how you searched, what your scan
-surfaced, what your scout's verdict said, why this issue fits your
-profile, and what you hope to learn. If your scout's verdict on it
-was reject and you chose it anyway, say so here and say why; choosing
-against your own tool silently is what loses points. Close with an
-honest read of the tool itself: where the scout fell short on a real
-wild search and what you changed or would change, or what convinced
-you it held up. **Record the link to your claim comment in this section too.**
-Not claimed yet? Write `claim pending` and today's date where the link goes,
-and add the link the moment your claim lands.]
+I asked AI to give me a list of five to ten issues from the Issue Selection
+site that it thought I would like, then reviewed them manually and picked the
+ones I found most interesting. I graded my picks directly with issue-scout,
+and it accepted nvaccess/nvda#20159 with every required check passing, all
+three preferred checks passing, and a difficulty note of straightforward. It
+is a very clear-cut issue and should be fairly straightforward to fix;
+AI-assisted, I don't expect it to take two weeks. The expectations in the
+repository are very clear and should be easy to follow. The fact that three PRs were already closed because
+they didn't listen shows that the maintainer actually cares about the
+repository, and that I should be able to just follow the rules.
+
+I hope to learn the process of actually getting a PR through a real review,
+and the steps CodePath is teaching. Because the issue is on the easier,
+straightforward side, I'll be able to learn the mechanics more than the
+coding. I think the scout held up. My one disagreement was
+yunaremaia/taintrace#81, which my rubric accepted in all three scans: the
+repository looks naked, with a lot of AI-generated issues and comments, and it
+doesn't look like the maintainer actually cares about it as much, so I dropped
+it.
+
+Claim comment: https://github.com/nvaccess/nvda/issues/20159#issuecomment-6183111660
 
 **Toolkit**
 
-- Tool: issue-scout (your scout: your search strategy, your rubric),
-  and how you used it
-- What it produced: [the scan and its verdict on this issue, described]
-- Difficulties: [where it fell short, or "none met" if none did]
-- What changed: [what you patched or would update, or "nothing"]
+- Tool: issue-scout, in direct mode: I graded my Issue Selection site picks
+  with `issue-scout: grade <URL>` after patching my rubric's scope check to
+  `scope-feasible` with a difficulty note.
+- What it produced: an accept on nvda#20159 with all six required and all
+  three preferred checks passing, and a straightforward difficulty note
+  (maintainer seanbudd had already decided the fix is a clearer error
+  message).
+- Difficulties: my rubric accepted yunaremaia/taintrace#81 in all three scans
+  even though the repo looks naked, with a lot of AI-generated issues and
+  comments.
+- What changed: I added `yunaremaia/taintrace` to a blocklist in my search
+  strategy's ranking filters so later scans drop it, and logged the dated
+  friction line in `scan-notes.md`.
 
 ---
 
