@@ -89,10 +89,15 @@ rule to follow NVDA's plain-sentence titles, the gate passed, and the PR
 opened through it. My manifest runs five checks from NVDA's contributing
 guide, with `runlint.bat` excluded because it rewrites files.
 
-**Unit 8: [one line on the tool work]**
+**Unit 8: (2026-10-22) Installed the PR-monitor, wrote my playbook, and ran it on nvaccess/nvda#21045**
 
-[2-4 sentences: the PR-monitor and your playbook. What it read, what it
-drafted, what you did with the draft.]
+The free `--state` read classed my PR as FEEDBACK-IN, but the only comment was
+the Codex bot's no-findings summary, so my playbook now says a bot summary
+with no findings isn't feedback. My first full run refused because the
+playbook was still the template; once I filled it (7 days of quiet before a
+nudge, based on NVDA's "within a couple of days" and 0-4 days to first review
+in their last 15 merged PRs), it drafted a wait note instead of a reply. I
+took that move: nothing posted, and no nudge before about 2026-10-29.
 
 ---
 
@@ -422,6 +427,12 @@ retold instead of pasted, unverified cases missing from Known issues). Run 4
 passed clean. Opened the PR as a draft through the gated `gh pr create`, then
 marked it ready for review.
 
+**2026-10-22**
+
+A Codex review bot reported no findings on `ff90fb210`. Installed the
+PR-monitor and wrote my playbook; its run drafted a wait note, so I posted
+nothing. Checked the PR against the Assignment 5 rubric before submitting.
+
 **Toolkit**
 
 - Tool: git and the NVDA build scripts (`scons.bat`, `rununittests.bat`),
@@ -453,15 +464,19 @@ explained.
 - 2026-10-22: no maintainer feedback yet. A Codex review bot
   (`chatgpt-codex-connector`) reviewed commit `ff90fb210` and reported no
   findings. CI waits for a maintainer to approve it on a first PR.
+- 2026-10-22: still no human review. My PR-monitor drafted a wait note, not a
+  reply, under my 7-day threshold; I posted nothing.
 
 **Status:** Awaiting review (marked ready for review on 2026-10-21).
 
 **Toolkit**
 
 - Tool: the ship-gate (my pr-precheck plus my `ship-manifest.md`) and the
-  voice-guard, both on `gh pr create`.
+  voice-guard, both on `gh pr create`; after it opened, the PR-monitor with my
+  `playbook.md`.
 - What it produced: two blocks and two passes on the manual doorway, then a
-  pass at the door that opened #21045.
+  pass at the door that opened #21045. The monitor's first full run drafted
+  a wait note: no human review yet, under my 7-day threshold.
 - Difficulties: the gate compared against a stale local `master`, and the
   hook run of `uv sync` hit OneDrive's read-only `.venv` and blocked twice
   before the PR could open. The voice-guard also stopped my draft on "`runlicensecheck`
