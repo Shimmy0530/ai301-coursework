@@ -78,10 +78,16 @@ was added to the hook. For the repo memory, the most useful parts are the
 guidance from the closed PRs: three PRs on this issue got closed, which means
 they didn't do something right, and I can learn from it.
 
-**Unit 7: [one line on the tool work]**
+**Unit 7: (2026-10-21) Installed the ship-gate on my PR doorway, wrote my NVDA manifest, and shipped nvaccess/nvda#21045 after two blocks**
 
-[2-4 sentences: the ship-gate and your gate manifest. What it produced
-on your real branch, what fought you, what changed because of it.]
+The gate's first run on my real branch blocked: my local `master` was a week
+stale, so the diff showed 104 files instead of 3, and nothing showed the bug
+before the fix. The second run blocked on a copyright header change I hadn't
+put in my plan, so I recorded it as a deviation. After I pasted every output
+into code blocks instead of retelling it, and fixed my voice guide's title
+rule to follow NVDA's plain-sentence titles, the gate passed, and the PR
+opened through it. My manifest runs five checks from NVDA's contributing
+guide, with `runlint.bat` excluded because it rewrites files.
 
 **Unit 8: [one line on the tool work]**
 
@@ -136,26 +142,51 @@ Claim comment: https://github.com/nvaccess/nvda/issues/20159#issuecomment-618311
 
 **Problem Description**
 
-[In your own words, what is broken or missing?]
+When you create a portable copy of NVDA and type a drive letter with no
+backslash after it, like `D:`, NVDA rejects it with a general "absolute path"
+error that never says why. Rejecting it is correct: `D:` means the current
+folder on drive D, not the root of the drive. The problem is the message.
+It tells you the path "must start with a drive letter", and `D:` already
+does. Since #19666 its own example is `C:`, which is also a bare drive and
+gets the same error.
 
 **Expected Behavior**
 
-[What should happen?]
+NVDA should still reject `D:`, but the message should say what's wrong:
+the drive letter needs a backslash after it, so `D:\` for the root of the
+drive or `D:\folder` for a folder on it. The general message's example should
+be `C:\`.
 
 **Current Behavior**
 
-[What actually happens?]
+On master, typing `D:` and pressing Continue shows:
+
+```
+Please specify the absolute path where the portable copy should be created. It must start with a drive letter (e.g. C:). It may include system variables (e.g. %temp%, %homepath%) as placeholders for parts of the path.
+Current path: D:.
+```
 
 **Affected Components**
 
-[Which parts of the codebase are involved?]
+- `source/gui/installerGui.py`: `PortableCreaterDialog.onCreatePortable`,
+  which checked the path and showed the error, and the new
+  `_validatePortableDirectory` helper the check moved into.
+- `tests/unit/test_installer.py`: where the new tests live.
+- `user_docs/en/changes.md`: the change log entry.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: issue-scout in direct mode (`issue-scout: grade <URL>`), then reading
+  the issue thread and the three closed PRs myself.
+- What it produced: an accept with a straightforward difficulty note, and the
+  maintainer's decision that the fix is a clearer message, not accepting `D:`.
+- Difficulties: the scout grades whether an issue is a good pick, not what
+  the bug actually is, and the issue had moved since it was filed: #19666
+  changed the example from `C:\` to `C:`, so the issue's quoted text no longer
+  matched master.
+- What changed: I only understood the full problem after reproducing it and
+  seeing the `C:` example myself. I asked about it on the thread, and seanbudd
+  answered "Yes, please update the example", which added it to the fix.
 
 ---
 
@@ -191,6 +222,11 @@ Challenges and fixes:
   "'scons.bat' is not recognized", because that shell sets
   `NoDefaultCurrentDirectoryInExePath`. Calling it as `.\scons.bat` worked;
   in a normal Command Prompt plain `scons source` works.
+- The clone lives in OneDrive, and OneDrive turned parts of `.venv` into
+  read-only cloud placeholders, so `uv sync` failed with "Access is denied".
+  Pinning the folder to the device (`attrib -U +P -R ".venv\*" /S /D`) fixed
+  it the first time; the second time, deleting the broken wxPython
+  `dist-info` folders and running `uv sync --reinstall-package wxpython` did.
 
 **Steps to Reproduce**
 
@@ -209,7 +245,7 @@ Challenges and fixes:
 
 **Reproduction Evidence**
 
-- **Commit showing reproduction:** [link to commit in your fork]
+- **Commit showing reproduction:** https://github.com/Shimmy0530/nvda/commit/35a4f5740 (adds the 10 tests; run against master's `installerGui.py` they fail 10 of 10 with `AttributeError`)
 - **Screenshots/logs:** screenshot of the error dialog over the Create
   Portable NVDA dialog, taken 2026-10-15 on `20ae5c856`; the full error
   text is pasted in step 3 above.
@@ -223,10 +259,21 @@ Challenges and fixes:
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: repro-check, plus the voice-guard on the posting doorway. I posted
+  the claim and the repro report through
+  `claude "run this command: gh issue comment ... --body-file ..."` so the
+  guard checked each one first.
+- What it produced: the guard passed both comments. repro-check, run on the
+  posted claim and report afterwards, said reject on one check:
+  `env-recorded`, because my report never named my Windows version.
+- Difficulties: the menu item I needed is hidden when NVDA runs from source,
+  so I had to open the dialog from the Python console, and my first command
+  there failed with `NameError: name 'gui' is not defined` until I imported
+  it. My claim also said I'd reproduce "on the current alpha" when I actually
+  used master.
+- What changed: the comment was already posted, so I put the environment
+  (Windows 11 build 26300, no add-ons) into the PR description instead, where
+  reviewers read it.
 
 ---
 
@@ -234,93 +281,195 @@ Challenges and fixes:
 
 **Analysis**
 
-[Your analysis of the root cause: what is causing the issue, traced
-to the files and functions involved.]
+`PortableCreaterDialog.onCreatePortable` in `source/gui/installerGui.py`
+expands the path with `os.path.expandvars`, then checks it with
+`os.path.isabs`. For `D:` that check is correctly `False`, because `D:` with
+nothing after the colon means the current folder on that drive. Every path
+that fails it gets the same general message, so nothing tells the user the
+missing backslash is the problem, and the message's example `C:` fails the
+same check.
 
 **Proposed Solution**
 
-[High-level description of your fix approach, and what you are
-deliberately NOT changing.]
+I followed seanbudd's decision and SaschaCowley's review on the closed PR
+#20446. The checks move out of the dialog into a helper,
+`_validatePortableDirectory`, that returns the absolute path or raises
+`DisplayableError`, so it can be tested without the GUI. If
+`os.path.splitroot` finds a drive but no root (`D:`, `D:folder`), the helper
+raises a new message saying the drive letter must be followed by a
+backslash. Everything else keeps the general message, with its example
+changed to `C:\`.
+
+Not changing: accepting `D:` or guessing a root for it, how valid paths are
+handled, the "Create a new folder" option, the non-empty folder warnings, or
+the User Guide (it doesn't quote this error).
 
 **Implementation Plan**
 
-1. [Modify file X to do Y]
-2. [Add or change Z]
-3. [Update tests]
+1. Add `_validatePortableDirectory` to `source/gui/installerGui.py` with the
+   empty, expand, `isabs` and `abspath` steps, the new bare-drive message, and
+   `C:\` as the general example.
+2. Change `PortableCreaterDialog.onCreatePortable` to call it and show errors
+   with `e.displayError(self)`.
+3. Add `Test_validatePortableDirectory` to `tests/unit/test_installer.py`:
+   empty, `D:`, `c:`, `D:folder`, `folder`, `\folder`, `D:\`,
+   `D:\portable\NVDA`, a UNC share and a system variable.
+4. Add a Bug Fixes line to `user_docs/en/changes.md`.
 
-[Record deviations here as they happen: what changed mid-build and
-why. A recorded deviation is honest work; silent drift is not.]
+Deviations:
+
+- 2026-10-21: added `Shimmy0530` to the copyright headers of the two files I
+  changed, as `projectDocs/dev/copyrightHeaders.md` asks. It wasn't in the
+  plan, and the ship-gate's second run blocked on exactly that until I
+  recorded it here and in `plan.md`.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: plan-check on my `plan.md`.
+- What it produced: accept, with all five required checks passing. The
+  preferred `unknowns-stated` check failed because the plan didn't say what I
+  hadn't tested.
+- Difficulties: I never posted a separate plan comment, because the approach
+  was already settled on the thread. My plan-check's procedure didn't say
+  what to do then, so it graded my claim in its place without a rule saying it
+  should.
+- What changed: I added an Unverified list to `plan.md` (`c:` and UNC only
+  unit-tested, UNC copy creation never tried, the new message in English until
+  translated), and patched plan-check's `procedure.md` with a step for the
+  no-plan-comment case. Its eval still agreed 4/4 on the items I re-ran.
 
 ---
 
 ## Testing Strategy
 
-[What observable checks prove the fix: your reproduction steps re-run
-against the built change (before and after), and the repo's own test
-suite or checks with the outcome shown. "Tests pass" with nothing
-observable named is not a strategy.]
+Two observable checks prove the fix.
+
+1. **My reproduction, re-run before and after.** Before, on master, `D:`
+   showed the general message with "(e.g. C:)". After, from a `scons dist`
+   build of my branch, I typed each input into Create portable copy myself:
+   - `D:` and `D:folder` show "The drive letter must be followed by a
+     backslash: use D:\ for the root of the drive, or D:\folder for a folder on
+     it."
+   - `folder` shows the general message, now with "(e.g. C:\)".
+   - An empty path shows "Please specify a directory in which to create the
+     portable copy."
+   - `%temp%\nvdaPortableTest2` still created a portable copy: "Successfully
+     created a portable copy of NVDA at ...\nvdaPortableTest2\NVDA".
+2. **The repo's own checks, with the new tests.** The 10 tests in
+   `Test_validatePortableDirectory`, run against master's `installerGui.py`:
+
+   ```
+   AttributeError: module 'gui.installerGui' has no attribute '_validatePortableDirectory'
+   Ran 10 tests in 0.014s
+   FAILED (errors=10)
+   ```
+
+   On my branch, the full suite (`rununittests`):
+
+   ```
+   Ran 1505 tests in 18.519s
+   OK (skipped=5)
+   ```
+
+   ruff check, ruff format --check, pyright and `runcheckpot` all passed too.
+
+Not tested by hand: `c:` and a UNC share (unit tests only), and creating a
+portable copy on a UNC share.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: the ship-gate, running my `ship-manifest.md` (`uv sync`, ruff and
+  pyright, `runcheckpot`, `rununittests`, `runlicensecheck`), plus a
+  `scons dist` build for the manual test.
+- What it produced: all five repo checks passed on every run, and
+  `test_evidence.md` with each command's output copied verbatim.
+- Difficulties: the dialog is hidden when NVDA runs from source, so testing
+  that a real portable copy still gets created needed a full `scons dist`
+  build. `runlicensecheck` prints only a package table with no summary line,
+  so there was nothing short to paste.
+- What changed: I added a before-and-after section to `test_evidence.md`,
+  running the new tests against master's code to show they fail without the
+  fix, after the gate blocked on the missing "before".
 
 ---
 
 ## Implementation Notes
 
-[A running log, added to as you work. Date each entry. What you
-built, decisions you made when you made them, wrong turns included.]
+**2026-10-15**
 
-**[Date]**
+Claimed the issue, built NVDA from source and reproduced `D:` on master
+`20ae5c856`. Noticed the message's example was now `C:` and asked about it on
+the thread; seanbudd gave the claim a thumbs up and answered "Yes, please
+update the example".
 
-[Entry]
+**2026-10-21**
 
-**[Date]**
+Branched `fix/20159-bare-drive-portable-path` from upstream/master
+`40e2df64c`. Committed the tests first (they fail on master), then the fix,
+then the change log line, then the copyright headers. A wrong turn: my first
+tests had single backslashes where Python needed double ones, and the test
+file wouldn't even import (`SyntaxError: (unicode error)`). Ran the full
+manifest, then tested a `scons dist` build by hand with `D:`, `D:folder`,
+`folder`, an empty path and a real portable copy.
 
-[Entry]
+**2026-10-21**
+
+Ran the ship-gate four times before shipping. Run 1 blocked because my local
+`master` was a week stale, so the diff showed 104 files instead of 3, and
+because nothing showed the before state. Run 2 blocked on the copyright
+header change I hadn't put in the plan. Run 3 passed with voice notes (output
+retold instead of pasted, unverified cases missing from Known issues). Run 4
+passed clean. Opened the PR as a draft through the gated `gh pr create`, then
+marked it ready for review.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: git and the NVDA build scripts (`scons.bat`, `rununittests.bat`),
+  with the ship-gate on the PR doorway.
+- What it produced: four commits that each tell one step: tests, fix, change
+  log, headers.
+- Difficulties: the stale local `master`, and OneDrive breaking `.venv`
+  twice, which also blocked the gate's `uv sync` check while I was shipping.
+- What changed: local `master` now tracks `upstream/master`, and the next
+  clone goes outside OneDrive.
 
 ---
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when opened]
+**PR Link:** https://github.com/nvaccess/nvda/pull/21045
 
-**PR Description:** [what the PR says; much of the content above
-adapts into it]
+**PR Description:** It opens with one line: "This is my first contribution
+to NVDA. I used Claude Code to help write it; I reviewed every change and did
+the manual testing below myself." The rest is NVDA's template filled as
+written: `Fixes #20159`, the summary, the user facing changes, the approach
+(the helper from the #20446 review, `os.path.splitroot` for the bare drive),
+the testing with before and after output pasted in code blocks, the
+environment, what I didn't test by hand, and the checklist with each item
+explained.
 
 **Maintainer Feedback:**
 
-- [Date]: [feedback received, or "none yet"; silence is a normal
-  state and costs you nothing]
-- [Date]: [how you addressed it]
+- 2026-10-22: no maintainer feedback yet. A Codex review bot
+  (`chatgpt-codex-connector`) reviewed commit `ff90fb210` and reported no
+  findings. CI waits for a maintainer to approve it on a first PR.
 
-**Status:** [Awaiting review / Iterating / Merged / Closed. The
-status is a fact you record, never a grade: the PR is graded as
-opened.]
+**Status:** Awaiting review (marked ready for review on 2026-10-21).
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: the ship-gate (my pr-precheck plus my `ship-manifest.md`) and the
+  voice-guard, both on `gh pr create`.
+- What it produced: two blocks and two passes on the manual doorway, then a
+  pass at the door that opened #21045.
+- Difficulties: the gate compared against a stale local `master`, and the
+  hook run of `uv sync` hit OneDrive's read-only `.venv` and blocked twice
+  before the PR could open. The voice-guard also stopped my draft on "`runlicensecheck`
+  also exits 0." because that retold output instead of pasting it.
+- What changed: I recorded deviations in `plan.md`, added the before state to
+  the evidence, pasted every output in code blocks, and patched my voice
+  guide's title rule: it required `type(scope):` titles, but NVDA uses plain
+  sentences, so the rule now follows the repo's own convention.
 
 ---
 
@@ -328,25 +477,40 @@ opened.]
 
 **Technical Skills Gained**
 
-[What you learned technically, named concretely.]
+- Building NVDA from source: Visual Studio components from `.vsconfig`, uv,
+  `scons source` and `scons dist`.
+- Windows path rules: `D:` and `D:folder` are drive-relative, and
+  `os.path.splitroot` tells a bare drive apart from a rooted path.
+- Moving a GUI check into a function that raises `DisplayableError`, so it can
+  be unit tested without mocking anything.
+- Writing commits that each tell one step, with the failing test first.
 
 **Challenges Overcome**
 
-[What was hard and how you solved it; point at the real events, the
-Toolkit blocks above are full of them.]
+- The dev environment: eight missing Visual Studio components, an old uv, the
+  wrong Python, and a shell that wouldn't run `scons.bat` without `.\`.
+- OneDrive breaking `.venv`, twice.
+- The gate blocking my own PR twice, and each block pointing at something real:
+  a stale base branch, a missing before state, and a change I hadn't planned.
 
 **What I'd Do Differently Next Time**
 
-[Reflection on your process.]
+Clone outside OneDrive from the start. Update local `master` from upstream
+before comparing anything against it. Put the Windows version in the repro
+report the first time, and run the gate before I think I'm finished, not
+after.
 
 ---
 
 ## Resources Used
 
-[What actually helped, not a reading list. List things this story
-already shows you using: the doc you followed to set the environment
-up, the thread that explained the bug, the person who answered you.
-One real entry beats ten plausible ones.]
-
-- [Link to documentation that helped]
-- [Discussion, issue, or post that helped]
+- NVDA's contributing guide, `projectDocs/dev/contributing.md`: the PR rules
+  and the AI policy ("All PRs must be submitted by a human").
+- `projectDocs/dev/createDevEnvironment.md` and `buildingNVDA.md`: how I set up
+  and built NVDA.
+- The issue thread, https://github.com/nvaccess/nvda/issues/20159: seanbudd's
+  "make the error message more clear" and "Yes, please update the example".
+- SaschaCowley's review on the closed PR
+  https://github.com/nvaccess/nvda/pull/20446: use `os.path.splitroot`, move
+  the check into a helper that raises `DisplayableError`, don't mock
+  `os.path`.
